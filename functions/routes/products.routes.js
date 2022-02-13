@@ -2,15 +2,15 @@ const { Router } = require("express");
 const router = Router();
 
 const admin = require("firebase-admin");
-const { tadi, firestore } = require("firebase-functions/v1");
+const { picha, firestore } = require("firebase-functions/v1");
 const db = admin.firestore();
 const TIKE = admin.firestore;
 
 //Create
-router.post("/api/ciem/", async(req, res) => {
+router.post("/api/categorias/", async(req, res) => {
     try {
         await db
-            .collection("Drivers")
+            .collection("Categorias")
             .doc("/" + req.body.id + "/")
             .create({ name: req.body.name });
         return res.status(200).json();
@@ -19,32 +19,34 @@ router.post("/api/ciem/", async(req, res) => {
     }
 });
 
-//DRIVER FOR ID
-router.get("/api/ciem/:driver_id", (req, res) => {
+router.get("/api/categorias/:categoria_id", (req, res) => {
     (async() => {
         try {
-            const doc = db.collection("Drivers").doc(req.params.driver_id);
+            const doc = db.collection("Categorias").doc(req.params.categoria_id);
             const item = await doc.get();
             const response = item.data();
-            return res.status(200).send(response);
+            return res.status(200).json(response);
         } catch (error) {
-            return res.status(500).send(error);
+            return res.status(500).json(error);
         }
     })();
 });
 
 //ALL MESSAGES
-router.get("/api/messages", async(req, res) => {
+router.get("/api/lista/categorias", async(req, res) => {
     try {
-        let query = db.collection("Messages");
+        let query = db.collection("Categorias");
         const querySnapshot = await query.get();
         let docs = querySnapshot.docs;
 
         const response = docs.map((doc) => ({
-            asunto: doc.data().asunto,
+            id: doc.data().id,
             fecha: doc.data().fecha,
-            mensaje: doc.data().mensaje,
-            uuid: doc.data().uuid,
+            eatatus: doc.data().eatatus,
+            nombre: doc.data().nombre,
+            icono: doc.data().icono,
+            imagen: doc.data().imagen,
+            pupular: doc.data().pupular,
         }));
 
         return res.status(200).json(response);
@@ -53,22 +55,22 @@ router.get("/api/messages", async(req, res) => {
     }
 });
 
-//ALL DRIVERS
-router.get("/api/ciem", async(req, res) => {
-    try {
-        let query = db.collection("Drivers");
-        const querySnapshot = await query.get();
-        let docs = querySnapshot.docs;
+// //ALL DRIVERS
+// router.get("/api/ciem", async(req, res) => {
+//     try {
+//         let query = db.collection("Drivers");
+//         const querySnapshot = await query.get();
+//         let docs = querySnapshot.docs;
 
-        const response = docs.map((doc) => ({
-            userName: doc.data().username,
-        }));
+//         const response = docs.map((doc) => ({
+//             userName: doc.data().username,
+//         }));
 
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json(error);
-    }
-});
+//         return res.status(200).json(response);
+//     } catch (error) {
+//         return res.status(500).json(error);
+//     }
+// });
 
 // //Consulta de la direccion del restaurante por Place uid.
 // router.get("/api/place/:placeUid", (req, res) => {
