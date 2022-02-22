@@ -32,7 +32,7 @@ router.get("/api/categorias/:categoria_id", (req, res) => {
     })();
 });
 
-//ALL MESSAGES
+//ALL CATEGORIES
 router.get("/api/lista/categorias", async(req, res) => {
     try {
         let query = db.collection("Categorias");
@@ -47,6 +47,7 @@ router.get("/api/lista/categorias", async(req, res) => {
             icono: doc.data().icono,
             imagen: doc.data().imagen,
             pupular: doc.data().pupular,
+            color: doc.data().color
         }));
 
         return res.status(200).json(response);
@@ -54,6 +55,134 @@ router.get("/api/lista/categorias", async(req, res) => {
         return res.status(500).json(error);
     }
 });
+
+router.get("/api/lista/negocios", async(req, res) => {
+    try {
+        let query = db.collection("Negocios");
+        const querySnapshot = await query.get();
+        let docs = querySnapshot.docs;
+
+        const response = docs.map((doc) => ({
+            categorias: doc.data().categorias,
+            ciudad: doc.data().ciudad,
+            correo: doc.data().correo,
+            estatus: doc.data().estatus,
+            fecha: doc.data().fecha,
+            id: doc.data().id,
+            llamar: doc.data().llamar,
+            nombre: doc.data().nombre,
+            portada: doc.data().portada,
+            propietario: doc.data().propietario,
+            sitio_web: doc.data().sitio_web,
+            sucursales: doc.data().sucursales,
+            ubicacion: doc.data().ubicacion
+
+        }));
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+
+
+router.get("/api/profiles/:profiles_id", (req, res) => {
+    (async() => {
+        try {
+            const doc = db.collection("Negocios").doc(req.params.profiles_id);
+            const item = await doc.get();
+            const response = item.data();
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    })();
+});
+
+
+router.get("/api/lista/cupones", async(req, res) => {
+    try {
+        let query = db.collection("Cupones");
+        const querySnapshot = await query.get();
+        let docs = querySnapshot.docs;
+
+        const response = docs.map((doc) => ({
+            estatus: doc.data().estatus,
+            fecha: doc.data().fecha,
+            id: doc.data().id,
+            imagen: doc.data().imagen,
+            negocio_id: doc.data().negocio_id,
+            tipo: doc.data().tipo,
+            vigencia: doc.data().vigencia,
+
+
+        }));
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+
+
+router.get("/api/cupones/:cupones_id", (req, res) => {
+    (async() => {
+        try {
+            const doc = db.collection("Cupones").doc(req.params.cupones_id);
+            const item = await doc.get();
+            const response = item.data();
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    })();
+});
+
+
+router.get("/api/lista/cuponesstd", async(req, res) => {
+    try {
+        let query = db.collection("CuponesStd");
+        const querySnapshot = await query.get();
+        let docs = querySnapshot.docs;
+
+        const response = docs.map((doc) => ({
+            categorias: doc.data().categorias,
+            descripcion: doc.data().descripcion,
+            estatus: doc.data().estatus,
+            fecha: doc.data().fecha,
+            horario: doc.data().horario,
+            id: doc.data().id,
+            negocio_id: doc.data().negocio_id,
+            popular_favs: doc.data().popular_favs,
+            portada: doc.data().portada,
+            qr: doc.data().qr,
+            terminos_condiciones: doc.data().terminos_condiciones,
+
+        }));
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+
+
+
+router.get("/api/cuponesstd/:cuponesstd_id", (req, res) => {
+    (async() => {
+        try {
+            const doc = db.collection("CuponesStd").doc(req.params.cuponesstd_id);
+            const item = await doc.get();
+            const response = item.data();
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    })();
+});
+
 
 // //ALL DRIVERS
 // router.get("/api/ciem", async(req, res) => {
